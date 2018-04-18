@@ -351,6 +351,24 @@ class CustomLoader implements TranslateLoader {
     }
 }
 ```
+##### Example with .json file 
+Note: [Instantiating HttpClient in constructor will result in ERROR ( cyclic dependency! InjectionToken_HTTP_INTERCEPTORS )]
+So we have instantiate the class in our method by injecting it.
+```ts
+import { Injectable,Injector } from '@angular/core';
+import {TranslateLoader} from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+@Injectable()
+export class CustomLoader implements TranslateLoader {
+  constructor(private inej:Injector){}
+
+  getTranslation(lang: string): Observable<any> {
+    let http = this.inej.get(HttpClient);
+    return http.get(`./assets/i18n/${lang}.json`);
+  }
+}
+```
 
 Once you've defined your loader, you can provide it in your configuration by adding it to its `providers` property.
 
